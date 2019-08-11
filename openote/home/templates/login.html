@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/static/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="/static/login.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>OPENOTE</title>
+</head>
+<body class="text-center">
+<script src="/static/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="/static/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="/static/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+<div class="container">
+    <form id="login-form" class="form-signin" action="{% url 'login' %}" method="post">
+        {% csrf_token %}
+        <h1 class="h3 mb-3 font-weight-normal">Login</h1>
+        <label for="username" class="sr-only">Username</label>
+        <input type="text" name="username" class="form-control" placeholder="Username" required autofocus>
+        <label for="password" class="sr-only">Password</label>
+        <input type="password" name="password" class="form-control" placeholder="Password" required>
+        {#        <div class="checkbox mb-3">#}
+        {#            <label>#}
+        {#                <input type="checkbox" value="remember-me"> Remember me#}
+        {#            </label>#}
+        {#        </div>#}
+        <button id="submit" class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+        <p style="color: #c82333"> {{ msg }}</p>
+        <p class="mt-5 mb-3 text-muted">root# nc -lv 1334</p>
+    </form>
+
+</div>
+
+</body>
+</html>

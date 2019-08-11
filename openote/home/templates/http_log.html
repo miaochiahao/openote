@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block usage %}
+    <h3>HTTP</h3>
+    <code>Usage:</code><br>
+    <code>curl http://1m8.pw/`whoami`</code>
+{% endblock usage %}
+
+{% block button %}
+    <script>
+        function delete_record() {
+            let xml = new XMLHttpRequest();
+            let url = "{% url 'delete_http_record' %}";
+            xml.open("GET", url, true);
+            xml.onreadystatechange = function f() {
+                window.location.href = '{% url "http" %}';
+            };
+            xml.send();
+        }
+    </script>
+    <button type="button" class="btn btn-outline-primary" style="min-width: 82px"
+            onclick="window.location.href='{% url "http" %}'">Refresh
+    </button>
+    <button type="button" class="btn btn-outline-danger" style="min-width: 82px" onclick="delete_record()">Clear
+    </button>
+{% endblock button %}
+
+{% block record %}
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Path</th>
+            <th scope="col">Method</th>
+            <th scope="col">Time</th>
+            <th scope="col">Source</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for r in results %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td><a href="{% url "http_details" r.log_id %}">{{ r.host }}</a></td>
+                <td>
+                    {% if r.method == "GET" %}
+                        <span class="badge badge-primary">GET</span>
+                    {% elif r.method == "POST" %}
+                        <span class="badge badge-secondary">POST</span>
+                    {% elif r.method == "PUT" %}
+                        <span class="badge badge-success">PUT</span>
+                    {% elif r.method == "DELETE" %}
+                        <span class="badge badge-danger">DELETE</span>
+                    {% elif r.method == "OPTION" %}
+                        <span class="badge badge-warning">OPTION</span>
+                    {% elif r.method == "PATCH" %}
+                        <span class="badge badge-info">PATCH</span>
+                    {% elif r.method == "HEAD" %}
+                        <span class="badge badge-info">HEAD</span>
+                    {% else %}
+                        <span>{{ r.method }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ r.time }}</td>
+                <td>{{ r.source }}</td>
+            </tr>
+
+        {% endfor %}
+
+
+        </tbody>
+    </table>
+{% endblock record %}
+
+{% block pagination %}
+    <div class="pagination">
+
+    <span class="step-links">
+        {% if ten_logs.has_previous %}
+            <a href="?page=1">&laquo;</a>
+            <a href="?page={{ ten_logs.previous_page_number }}">{{ ten_logs.previous_page_number }}</a>
+        {% endif %}
+
+        <span class="current" style="color: #c82333">
+            {{ ten_logs.number }}
+        </span>
+
+        {% if ten_logs.has_next %}
+            <a href="?page={{ ten_logs.next_page_number }}">{{ ten_logs.next_page_number }}</a>
+            <a href="?page={{ ten_logs.paginator.num_pages }}">&raquo;</a>
+        {% endif %}
+    </span>
+    </div>
+{% endblock pagination %}

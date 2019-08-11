@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/static/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>OPENOTE</title>
+</head>
+<body>
+<script src="/static/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="/static/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="/static/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+<!--导航栏-->
+<div class="container">
+    <ul class="nav justify-content-end">
+        <li class="nav-item">
+            <a class="nav-link active" href="{% url 'http' %}">HTTP</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'dns' %}">DNS</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'file' %}">FILE</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'xss' %}">XSS</a>
+        </li>
+
+
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'logout' %}">LOGOUT</a>
+        </li>
+    </ul>
+</div>
+
+<div class="container">
+
+    <blockquote class="blockquote">
+        {% block usage %}
+        {% endblock usage %}
+    </blockquote>
+</div>
+
+<div class="container" style="margin-bottom: 10px; margin-block: 10px">
+    {% block button %}
+    {% endblock button %}
+</div>
+
+<div class="container">
+
+    {% block record %}
+
+    {% endblock record %}
+
+    {% block pagination %}
+    {% endblock pagination %}
+</div>
+
+</body>
+</html>
