@@ -10,7 +10,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
 from .data.black_list import black_list
-from .models import HTTPLog, DNSLog
+from .models import HTTPLog, DNSLog, FileService
 
 
 # Create your views here.
@@ -38,6 +38,7 @@ def login_view(request):
     return HttpResponse(template.render(context, request))
 
 
+@login_required()
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse('login'))
@@ -51,7 +52,7 @@ def index_view(request):
 @login_required()
 def http_view(request):
     template = loader.get_template("http_log.html")
-    all_logs = HTTPLog.objects.all()
+    all_logs = HTTPLog.objects.all().order_by("-time")
     paginator = Paginator(all_logs, 10)
     page = request.GET.get("page", "1")
     try:
@@ -95,7 +96,7 @@ def delete_dns_record(request):
 @login_required()
 def dns_view(request):
     template = loader.get_template("dns_log.html")
-    all_logs = DNSLog.objects.all()
+    all_logs = DNSLog.objects.all().order_by("-time")
     paginator = Paginator(all_logs, 10)
     page = request.GET.get("page", "1")
     try:
@@ -134,11 +135,57 @@ def xss_view(request):
 @login_required()
 def file_service_view(request):
     template = loader.get_template("file_service.html")
+    all_logs = FileService.objects.all().order_by("-time")
+    paginator = Paginator(all_logs, 10)
+    page = request.GET.get("page", "1")
+    try:
+        ten_logs = paginator.page(page)
+    except PageNotAnInteger:
+        ten_logs = paginator.page(1)
+    except EmptyPage:
+        ten_logs = paginator.page(paginator.num_pages)
+
+    results = []
+    for l in ten_logs.object_list:
+        t = {
+            "name": l.name,
+            "content": l.content,
+            "source": l.id,
+            "time": l.time,
+        }
+        results.append(t)
+
+    context = {
+        "results": results,
+        "ten_logs": ten_logs,
+    }
+
+    return HttpResponse(template.render(context, request))
+
+
+@login_required()
+def add_file_service(request):
+    template = loader.get_template("add_file_service.html")
+
     context = {
 
     }
     return HttpResponse(template.render(context, request))
 
+
+def return_file(request, file_uri):
+
+    return HttpResponse(file_uri)
+
+
+@login_required()
+def manage_file_templates(request):
+    template = loader.get_template("manage_file_templates.html")
+
+    context = {
+
+    }
+    return HttpResponse(template.render(context, request))
 
 # 此处禁用csrf_token 保证POST请求顺利
 # TODO: black_list

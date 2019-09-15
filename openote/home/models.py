@@ -21,9 +21,10 @@ class DNSLog(models.Model):
 
 class FileService(models.Model):
     time = models.DateTimeField(auto_now=True)
-    content_type = models.CharField(max_length=64)
-    http_code = models.CharField(max_length=32)
-    content = models.TextField()
+    name = models.CharField(max_length=64)
+    headers = models.TextField(default="")
+    is_binary = models.BooleanField(default=False)
+    content = models.TextField(default="")
 
 
 class XSSProject(models.Model):

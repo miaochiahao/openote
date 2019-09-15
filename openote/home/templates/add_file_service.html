@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block forms %}
+    <div class="container">
+        <h3>New File</h3>
+        <form>
+
+            <label style="width: 100%; text-align: right"><i class="fa fa-save fa-2x"></i></label>
+
+
+            <div style="margin-bottom: 10px">
+                <label style="width: 100%">Template <i class="fa fa-gear"
+                                                       onclick="window.location.href='{% url "manage_file_templates" %}'"></i>
+                </label>
+
+
+                <select class="selectpicker" data-live-search="true" data-width="100%">
+                    <option data-tokens="ketchup mustard">Hot Dog, Fries and a Soda</option>
+                    <option data-tokens="mustard">Burger, Shake and a Smile</option>
+                    <option data-tokens="frosting">Sugar, Spice and all things nice</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="formGroupName">Status <i class="fa fa-question-circle" title="说明"
+                                                     data-container="body" data-toggle="popover" data-placement="right"
+                                                     data-content="输入响应的状态码"></i></label>
+                <input type="text" class="form-control" id="formGroupExampleInput" name="status_code"
+                       placeholder="200">
+            </div>
+
+            <div class="form-group">
+                <label for="formGroupName">URL <i class="fa fa-question-circle" title="说明"
+                                                  data-container="body" data-toggle="popover" data-placement="right"
+                                                  data-content="此处输入文件名，以config.py为例，最终URL为: example.com/f/config.py"></i></label>
+                <input type="text" class="form-control" id="formGroupExampleInput" name="file_url"
+                       placeholder="e.g: config.py -> example.com/f/config.py">
+            </div>
+            <div class="form-group">
+                <label for="formGroupContentType">Custom Header
+                    <i class="fa fa-question-circle" title="说明"
+                       data-container="body" data-toggle="popover" data-placement="right"
+                       data-content="此处添加自定义HTTP头，每行一个<br>
+                       例如：<br>Access-Control-Allow-Origin:*<br>Content-Type:image/jpeg"></i>
+                </label>
+                <textarea type="text" class="form-control" id="formGroupExampleInput2" name="headers"
+                          placeholder="Access-Control-Allow-Origin:*"></textarea>
+            </div>
+
+            <div>
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-editor"
+                           role="tab" aria-controls="nav-editor" aria-selected="true">From Editor</a>
+                        <a class="nav-item nav-link" id="nav-file-tab" data-toggle="tab" href="#nav-file"
+                           role="tab" aria-controls="nav-file" aria-selected="false">From File</a>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-editor" role="tabpanel"
+                         aria-labelledby="nav-editor-tab">
+                        <div class="form-group">
+                            <label for="formGroupContent">Content <i class="fa fa-question-circle" title="说明"
+                                                                     data-container="body"
+                                                                     data-toggle="popover"
+                                                                     data-placement="right"
+                                                                     data-content="在此处输入HTML代码"></i></label>
+                            <textarea type="text" class="form-control" name="editor_content"></textarea>
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade" id="nav-file" role="tabpanel" aria-labelledby="nav-file-tab">
+                        <div class="form-group" id="file_upload_form">
+
+                            <form enctype="multipart/form-data" action="#" method="post">
+                                <input type="file" id="upload_file" style="display: none" onchange="selectCallback()">
+                                <button type="button" class="btn btn-outline-info" onclick="selectFileAndDisplay()"
+                                        id="upload_button"
+                                        style="margin-bottom: 10px; margin-top: 20px;min-width: 82px">Upload
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </form>
+
+        <script>
+            $(function () {
+                $("[data-toggle='popover']").popover({
+                    html: true,
+                });
+            });
+
+            function selectFileAndDisplay() {
+                $("#upload_file").click();
+            }
+
+            function selectCallback() {
+                let filename = document.getElementById("upload_file").value;
+                let filename_tag = document.getElementById("filename_tag");
+
+                if (filename_tag !== null) {
+                    filename_tag.innerText = filename;
+                } else {
+                    filename_tag = document.createElement("span");
+                    filename_tag.id = "filename_tag";
+                    filename_tag.innerText = filename;
+                    document.getElementById("upload_file").parentElement.append(filename_tag);
+                }
+            }
+
+        </script>
+
+        <div id="buttons">
+            <script>
+                function submit() {
+                    let url = "{% url 'add_file_service' %}";
+                    let status_code = document.getElementsByName("status_code")[0].value;
+                    let file_url = document.getElementsByName("file_url")[0].value;
+                    let headers = document.getElementsByName("headers")[0].value;
+                    let body = null;
+
+                    // 从文本框输入
+                    if (document.getElementsByClassName("nav-item nav-link active")[0].text === "From Editor") {
+                        body = document.getElementsByName("editor_content")[0].value;
+
+                        // 从文件上传
+                    } else {
+                        body = document.getElementsByName("");
+                    }
+
+                    alert(url + "\n" + status_code + "\n" + file_url + "\n" + headers + "\n" + body + "\n");
+
+                    toastr.success('Are you the 6 fingered man?');
+
+                }
+            </script>
+            <button type="button" class="btn btn-outline-primary" style="min-width: 82px"
+                    onclick="submit()">Submit
+            </button>
+
+            <button type="button" class="btn btn-outline-danger" style="min-width: 82px"
+                    onclick="window.location.href='{% url "file" %}'">
+                Back
+            </button>
+
+
+        </div>
+    </div>
+
+{% endblock %}
